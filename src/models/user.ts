@@ -1,5 +1,4 @@
 import {
-  Sequelize,
   DataTypes,
   Model,
   InferAttributes,
@@ -24,8 +23,33 @@ export class User extends Model<
 
   @Attribute(DataTypes.STRING)
   @NotNull
-  declare firstName: string;
+  declare fullName: string;
 
   @Attribute(DataTypes.STRING)
-  declare lastName: string | null;
+  @NotNull
+  declare email: string;
+
+  @Attribute(DataTypes.STRING)
+  @NotNull
+  declare password: string;
+
+  @Attribute(DataTypes.STRING)
+  @NotNull
+  declare role: string;
+
+  @Attribute(DataTypes.STRING)
+  @NotNull
+  declare status: string;
+
+  @Attribute(DataTypes.DATE)
+  @NotNull
+  declare createdAt: Date;
+
+  @Attribute(DataTypes.DATE)
+  @NotNull
+  declare updatedAt: Date;
+
+  @Attribute(DataTypes.STRING)
+  @NotNull
+  declare profileImage: string;
 }
