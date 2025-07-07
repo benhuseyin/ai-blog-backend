@@ -1,20 +1,19 @@
-import { Sequelize } from "@sequelize/core";
-import { PostgresDialect } from "@sequelize/postgres";
-import { User } from "@/models/user";
-import { Category } from "@/models/category";
-import { Blog } from "@/models/blog";
+import { Sequelize } from "sequelize";
 
-console.log(process.env.DB_NAME);
+const dbName = process.env.DB_NAME ?? "";
+const username = process.env.DB_USER ?? "";
+const pass = process.env.DB_PASS ?? "";
+const host = process.env.DB_HOST ?? "";
+const port = Number(process.env.PORT);
+
 const sequelize = new Sequelize({
-  dialect: PostgresDialect,
-  database: process.env.DB_NAME,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  host: process.env.DB_HOST,
-  port: parseInt(process.env.DB_PORT || "5432"),
-  ssl: true,
-  clientMinMessages: "notice",
-  models: [User, Category, Blog],
+  dialect: "postgres",
+  database: dbName,
+  username: username,
+  password: pass,
+  host: host,
+  port: port,
+  ssl: false,
 });
 
 export default sequelize;
