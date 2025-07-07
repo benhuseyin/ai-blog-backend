@@ -12,9 +12,9 @@ import {
   NotNull,
 } from "@sequelize/core/lib/decorators/legacy";
 
-export class User extends Model<
-  InferAttributes<User>,
-  InferCreationAttributes<User>
+export class Blog extends Model<
+  InferAttributes<Blog>,
+  InferCreationAttributes<Blog>
 > {
   @Attribute(DataTypes.INTEGER)
   @PrimaryKey

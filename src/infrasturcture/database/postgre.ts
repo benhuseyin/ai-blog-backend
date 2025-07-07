@@ -2,7 +2,9 @@ import { Sequelize } from "@sequelize/core";
 import { PostgresDialect } from "@sequelize/postgres";
 import { User } from "@/models/user";
 import { Category } from "@/models/category";
+import { Blog } from "@/models/blog";
 
+console.log(process.env.DB_NAME);
 const sequelize = new Sequelize({
   dialect: PostgresDialect,
   database: process.env.DB_NAME,
@@ -12,7 +14,7 @@ const sequelize = new Sequelize({
   port: parseInt(process.env.DB_PORT || "5432"),
   ssl: true,
   clientMinMessages: "notice",
-  models: [User, Category],
+  models: [User, Category, Blog],
 });
 
 export default sequelize;
