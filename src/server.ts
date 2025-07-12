@@ -8,10 +8,13 @@ import rateLimiter from "@/common/middleware/rateLimiter";
 import requestLogger from "@/common/middleware/requestLogger";
 import { env } from "@/common/utils/envConfig";
 import sequelize from "@/infrasturcture/database/postgre";
+import { authRouter } from "@/api/auth/authRouter";
+import { UserInit } from "@/models/user";
 
 const t = async () => {
   try {
     await sequelize.authenticate();
+    UserInit();
     console.log("Connection has been established successfully.");
   } catch (error) {
     console.error("Unable to connect to the database:", error);
@@ -37,6 +40,7 @@ app.use(requestLogger);
 
 // Routes
 app.use("/users", userRouter);
+app.use("/auth", authRouter);
 
 // Error handlers
 app.use(errorHandler());

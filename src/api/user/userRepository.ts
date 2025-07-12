@@ -10,4 +10,9 @@ export class UserRepository {
     const user = await User.findByPk(id);
     return user || null;
   }
+
+  async create(user: User): Promise<User> {
+    const newUser = await User.create(user);
+    return newUser;
+  }
 }
