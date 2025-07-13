@@ -31,7 +31,7 @@ export class User extends Model<
   declare profileImage?: string;
 }
 
-export const UserInit = () => {
+export const UserInit = async () => {
   User.init(
     {
       id: {
@@ -73,5 +73,6 @@ export const UserInit = () => {
     }
   );
 
-  return UserInit;
+  await sequelize.sync();
+  return;
 };
