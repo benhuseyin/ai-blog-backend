@@ -8,7 +8,12 @@ export class UserRepository {
 
   async findByIdAsync(id: number): Promise<User | null> {
     const user = await User.findByPk(id);
-    return user || null;
+    return user;
+  }
+
+  async findByEmailAsync(email: string): Promise<User | null> {
+    const user = await User.findOne({ where: { email } });
+    return user;
   }
 
   async create(user: User): Promise<User> {

@@ -10,11 +10,22 @@ import { env } from "@/common/utils/envConfig";
 import sequelize from "@/infrasturcture/database/postgre";
 import { authRouter } from "@/api/auth/authRouter";
 import { UserInit } from "@/models/user";
+import { CategoryInit } from "@/models/category";
+import { BlogInit } from "@/models/blog";
+import cookieParser from "cookie-parser";
+
+const init = async () => {
+  UserInit();
+  CategoryInit();
+  BlogInit();
+
+  await sequelize.sync();
+};
 
 const t = async () => {
   try {
     await sequelize.authenticate();
-    await UserInit();
+    await init();
     console.log("Connection has been established successfully.");
   } catch (error) {
     console.error("Unable to connect to the database:", error);
@@ -32,6 +43,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }));
 app.use(helmet());
+app.use(cookieParser());
 app.use(rateLimiter);
 t();
 

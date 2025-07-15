@@ -4,6 +4,8 @@ import { UserRepository } from "@/api/user/userRepository";
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import { logger } from "@/server";
 import { User } from "@/models/user";
+import bcrypt from "bcrypt";
+import { userService } from "../user/userService";
 
 export type RegisterParams = {
   fullName: string;
@@ -14,6 +16,11 @@ export type RegisterParams = {
 export type LoginParams = {
   email: string;
   password: string;
+};
+
+export type LoginResponse = {
+  id: number;
+  email: string;
 };
 
 export class AuthService {
@@ -28,11 +35,21 @@ export class AuthService {
     registerParams: RegisterParams
   ): Promise<ServiceResponse<null>> {
     try {
+      const protectedPassword = await bcrypt.hash(registerParams.password, 10);
+
+      const userToCheck = await userService.findByEmail(registerParams.email);
+
+      if (userToCheck) {
+        return ServiceResponse.failure(
+          "Email already exists",
+          null,
+          StatusCodes.BAD_REQUEST
+        );
+      }
       const user = {
-        id: 1,
         fullName: registerParams.fullName,
         email: registerParams.email,
-        password: registerParams.password,
+        password: protectedPassword,
         role: "user",
         status: "active",
         profileImage: "",
@@ -54,9 +71,11 @@ export class AuthService {
     }
   }
 
-  async login(LoginParams: LoginParams): Promise<ServiceResponse<null>> {
+  async login(
+    LoginParams: LoginParams
+  ): Promise<ServiceResponse<LoginResponse | null>> {
     try {
-      const user = null;
+      const user = await userService.findByEmail(LoginParams.email);
       if (!user) {
         return ServiceResponse.failure(
           "User not found",
@@ -64,7 +83,24 @@ export class AuthService {
           StatusCodes.NOT_FOUND
         );
       }
-      return ServiceResponse.success<null>("User found", null);
+
+      const isPasswordValid = await bcrypt.compare(
+        LoginParams.password,
+        user.password
+      );
+
+      if (!isPasswordValid) {
+        return ServiceResponse.failure(
+          "Invalid password",
+          null,
+          StatusCodes.BAD_REQUEST
+        );
+      }
+
+      return ServiceResponse.success<LoginResponse>("User found", {
+        id: user.id,
+        email: user.email,
+      });
     } catch (ex) {
       const errorMessage = `Error logging in: $${(ex as Error).message}`;
       logger.error(errorMessage);

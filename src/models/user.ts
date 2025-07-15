@@ -31,7 +31,7 @@ export class User extends Model<
   declare profileImage?: string;
 }
 
-export const UserInit = async () => {
+export const UserInit = () => {
   User.init(
     {
       id: {
@@ -40,14 +40,13 @@ export const UserInit = async () => {
         primaryKey: true,
       },
       fullName: {
-        type: new DataTypes.STRING(128),
+        type: new DataTypes.STRING(500),
         allowNull: false,
       },
       email: {
         type: new DataTypes.STRING(128),
         allowNull: false,
       },
-
       password: {
         type: new DataTypes.STRING(256),
         allowNull: false,
@@ -73,6 +72,5 @@ export const UserInit = async () => {
     }
   );
 
-  await sequelize.sync();
   return;
 };
