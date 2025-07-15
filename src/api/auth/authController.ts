@@ -14,7 +14,7 @@ class AuthController {
         id: serviceResponse.responseObject?.id,
         email: serviceResponse.responseObject?.email,
       });
-      res.cookie("token", token, {
+      res.cookie("authorization", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
